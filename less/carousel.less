@@ -29,7 +29,13 @@
       line-height: 1;
     }
   }
+  
+  > .neighbor,
+  > .touch {
+    .transition(none);
+  }
 
+  > .neighbor,
   > .active,
   > .next,
   > .prev { display: block; }
@@ -38,6 +44,7 @@
     left: 0;
   }
 
+  > .neighbor,
   > .next,
   > .prev {
     position: absolute;
@@ -51,6 +58,7 @@
   > .prev {
     left: -100%;
   }
+  
   > .next.left,
   > .prev.right {
     left: 0;
