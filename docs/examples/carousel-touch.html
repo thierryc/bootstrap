@@ -439,13 +439,16 @@
     <script src="../assets/js/bootstrap-popover.js"></script>
     <script src="../assets/js/bootstrap-button.js"></script>
     <script src="../assets/js/bootstrap-collapse.js"></script>
+    <script src="../assets/js/bootstrap-carousel.js"></script>
     <script src="../assets/js/bootstrap-carousel-touch.js"></script>
     <script src="../assets/js/bootstrap-typeahead.js"></script>
     <script>
       !function ($) {
         $(function(){
-          // carousel demo
-          $('#myCarousel').carousel_touch()
+          // carousel_touch demo
+          $('#myCarousel').carousel_touch({
+            interval: false
+          })
         })
       }(window.jQuery)
     </script>

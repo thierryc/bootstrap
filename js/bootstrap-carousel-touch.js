@@ -166,18 +166,17 @@
             
             var onTouchStart = function (event) {
                 var e = event.originalEvent;
-                if (that.sliding) return;
-                
-                // prevent cycling
-                if (isCycling) return;
-                
-                that.$active = that.$element.find('.item.active');
-                if (that.$active.hasClass('prev') || that.$active.hasClass('next')) return;
-                
                 if (e.touches.length === 1) {
                     isCycling && that.pause()
+                    
+                    $active = that.$element.find('.item.active');
+                    
+                    if ($active.hasClass('prev') || $active.hasClass('next')) return;
+                    
                     startX = e.touches[0].pageX;
                     startY = e.touches[0].pageY;
+                    delta = 0;
+                    
                     that.$element.on('touchmove', { carouselTouch: that }, onTouchMove);
                     that.$element.on('touchend', { carouselTouch: that }, onTouchEnd);
                     
@@ -194,28 +193,29 @@
             this.$element.on('touchstart', onTouchStart);
             
             var onTouchMove = function(event) {
-                var e = event.originalEvent;
-                var $neighbor, slide, margin;
+                var e = event.originalEvent, $neighbor, slide, margin;
+                
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
                 
                     if (isCycling) return;
                     
-                    that.$active.addClass('touch');
+                    $active.addClass('touch');
                     margin = slide = (100/that.$element.width()) * delta;
                     if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
                     
                     if (slide > 0) {
-                        $neighbor = that.$active.next();
+                        $neighbor = $active.next();
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').first();
                         $neighbor.addClass('next').addClass('neighbor').css('left', ( 100 - margin ) + '%');
                     } else {
-                        $neighbor = that.$active.prev();
+                        $neighbor = $active.prev();
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').last();
                         $neighbor.addClass('prev').addClass('neighbor').css('left', ( -100 - margin ) + '%');
                     }
-                    that.$active.css('left', (-margin) + '%');
+                    
+                    $active.css('left', (-margin) + '%');
                     e.preventDefault();
                 }
             };
@@ -226,18 +226,20 @@
                 if (!scrolling) {
                     var $neighbors = that.$element.find('.item.neighbor');
                     
-                    that.$active.removeClass('touch').css('left', '');
+                    $active.removeClass('touch').css('left', '');
                     $neighbors.removeClass('neighbor').removeClass('neighbor-prev').removeClass('neighbor-next').css('left', '');
-                    var activeZone = Math.min(250, that.$element.width()/2.5);
+                    var activeZone = Math.min(250, that.$element.width()/2);
                     if (delta > activeZone) {
                         that.next();
                     } else if  (delta < -activeZone) {
                         that.prev();
                     }
+                    isCycling && that.cycle()
                     e.preventDefault();
                 }
+                
                 that.$element.off('touchend', onTouchEnd);
-                that.cycle();
+                
             };
         }
 
@@ -281,18 +283,18 @@
  /* CAROUSEL TOUCH DATA-API
     * ================= */
 
-    $(document).on('click.carousel-touch.data-api', '[data-slide], [data-slide-to]', function (e) {
+    $(document).on('click.carousel_touch.data-api', '[data-slide], [data-slide-to]', function (e) {
         var $this = $(this), href
             , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
             , options = $.extend({}, $target.data(), $this.data())
             , slideIndex
-
-        $target.carousel_touch(options)
-
+            
+        $target.carousel_touch(options);
+        
         if (slideIndex = $this.attr('data-slide-to')) {
             $target.data('carousel-touch').pause().to(slideIndex).cycle()
         }
-
+        
         e.preventDefault()
     })
 
