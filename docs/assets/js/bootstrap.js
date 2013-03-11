@@ -636,10 +636,6 @@
                 if (e.touches.length === 1) {
                     isCycling && that.pause()
                     
-                    $active = that.$element.find('.item.active');
-                    
-                    if ($active.hasClass('prev') || $active.hasClass('next')) return;
-                    
                     startX = e.touches[0].pageX;
                     startY = e.touches[0].pageY;
                     delta = 0;
@@ -661,12 +657,13 @@
             
             var onTouchMove = function(event) {
                 var e = event.originalEvent, $neighbor, slide, margin;
-                
+                $active = that.$element.find('.item.active');
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
                 
                     if (isCycling) return;
+                    if ($active.hasClass('prev') || $active.hasClass('next')) return;
                     
                     $active.addClass('touch');
                     margin = slide = (100/that.$element.width()) * delta;
@@ -681,7 +678,6 @@
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').last();
                         $neighbor.addClass('prev').addClass('neighbor').css('left', ( -100 - margin ) + '%');
                     }
-                    
                     $active.css('left', (-margin) + '%');
                     e.preventDefault();
                 }
@@ -694,7 +690,7 @@
                     var $neighbors = that.$element.find('.item.neighbor');
                     
                     $active.removeClass('touch').css('left', '');
-                    $neighbors.removeClass('neighbor').removeClass('neighbor-prev').removeClass('neighbor-next').css('left', '');
+                    $neighbors.removeClass('neighbor').css('left', '');
                     var activeZone = Math.min(250, that.$element.width()/2);
                     if (delta > activeZone) {
                         that.next();
