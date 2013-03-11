@@ -46,7 +46,6 @@
   CarouselTouch.prototype = {
 
     cycle: function (e) {
-      
       if (!e) this.paused = false
       if (this.interval) clearInterval(this.interval);
       this.options.interval
@@ -177,10 +176,10 @@
           that.$element.on("touchend", { carouselTouch: that }, onTouchEnd);
           
           var prevItems = that.$element.find(".item.prev");
-          prevItems.removeClass("prev");
+          prevItems.removeClass("prev")
           
           var nextItems = that.$element.find(".item.next");
-          nextItems.removeClass("next");
+          nextItems.removeClass("next")
           
           //event.preventDefault();
         }
@@ -197,7 +196,7 @@
           if (isCycling) return;
           if ($active.hasClass("prev") || $active.hasClass("next")) return;
           
-          $active.addClass("touch");
+          $active.addClass("touch")
           margin = slide = (100/that.$element.width()) * delta;
           if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
           
@@ -210,8 +209,8 @@
             $neighbor = $neighbor.length ? $neighbor : that.$element.find(".item").last();
             $neighbor.addClass("prev").addClass("neighbor").css("left", ( -100 - margin ) + "%");
           }
-          $active.css("left", (-margin) + "%");
-          e.preventDefault();
+          $active.css("left", (-margin) + "%")
+          e.preventDefault()
         }
       };
       
@@ -222,8 +221,8 @@
         if (!scrolling) {
           var $neighbors = that.$element.find(".item.neighbor");
           
-          $active.removeClass("touch").css("left", "");
-          $neighbors.removeClass("neighbor").css("left", "");
+          $active.removeClass("touch").css("left", "")
+          $neighbors.removeClass("neighbor").css("left", "")
           var activeZone = Math.min(250, that.$element.width()/2);
           if (delta > activeZone) {
             that.next();
@@ -232,7 +231,7 @@
           }
           // 15 is finger size ;-) 
           if (Math.abs(delta) > 15) {
-            e.preventDefault();
+            e.preventDefault()
           }
           isCycling && that.cycle()
           
@@ -289,7 +288,7 @@
       , options = $.extend({}, $target.data(), $this.data())
       , slideIndex
       
-    $target.carouseltouch(options);
+    $target.carouseltouch(options)
     
     if (slideIndex = $this.attr("data-slide-to")) {
       $target.data("carouseltouch").pause().to(slideIndex).cycle()
