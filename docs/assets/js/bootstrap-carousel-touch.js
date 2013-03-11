@@ -168,6 +168,9 @@
                 if (that.sliding) return;
                 
                 isCycling && that.pause()
+                
+                if (isCycling) return;
+                
                 if (e.touches.length === 1) {
                     that.pause();
                     //console.log(that.$element);
@@ -182,15 +185,16 @@
             
             var onTouchMove = function (event) {
                 var e = event.originalEvent;
-                var $neighbor;
+                var $neighbor, slide, margin, $active;
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
                     e.preventDefault();
-                    var $active = that.$element.find('.item.active');
+                    $active = that.$element.find('.item.active');
                     $active.addClass('touch');
-                    var slide = (100/that.$element.width()) * delta;
-                    var margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
+                    margin = slide = (100/that.$element.width()) * delta;
+                    if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
+                    
                     if (slide > 0) {
                         $neighbor = $active.next();
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').first();
