@@ -168,37 +168,41 @@
                 var e = event.originalEvent;
                 if (that.sliding) return;
                 
-                isCycling && that.pause()
-                
                 // prevent cycling
                 if (isCycling) return;
-                clearInterval(that.interval)
-                that.interval = null
                 
                 that.$active = that.$element.find('.item.active');
                 if (that.$active.hasClass('prev') || that.$active.hasClass('next')) return;
-                that.$active.addClass('touch');
                 
                 if (e.touches.length === 1) {
-                    that.pause();
-                    //console.log(that.$element);
+                    isCycling && that.pause()
                     startX = e.touches[0].pageX;
                     startY = e.touches[0].pageY;
+                    that.$element.on('touchmove', { carouselTouch: that }, onTouchMove);
+                    that.$element.on('touchend', { carouselTouch: that }, onTouchEnd);
+                    
+                    var prevItems = that.$element.find('.item.prev');
+                    prevItems.removeClass('prev');
+                    
+                    var nextItems = that.$element.find('.item.next');
+                    nextItems.removeClass('next');
+                    
+                    event.preventDefault();
                 }
-                that.$element.on('touchmove', { carouselTouch: that }, onTouchMove);
-                that.$element.on('touchend', { carouselTouch: that }, onTouchEnd);
                 
             };
             this.$element.on('touchstart', onTouchStart);
             
-            var onTouchMove = function (event) {
+            var onTouchMove = function(event) {
                 var e = event.originalEvent;
                 var $neighbor, slide, margin;
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
-                    e.preventDefault();
-                   
+                
+                    if (isCycling) return;
+                    
+                    that.$active.addClass('touch');
                     margin = slide = (100/that.$element.width()) * delta;
                     if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
                     
@@ -212,6 +216,7 @@
                         $neighbor.addClass('prev').addClass('neighbor').css('left', ( -100 - margin ) + '%');
                     }
                     that.$active.css('left', (-margin) + '%');
+                    e.preventDefault();
                 }
             };
             
@@ -220,17 +225,16 @@
                 that.$element.off('touchmove', onTouchMove);
                 if (!scrolling) {
                     var $neighbors = that.$element.find('.item.neighbor');
-                    e.preventDefault();
+                    
                     that.$active.removeClass('touch').css('left', '');
                     $neighbors.removeClass('neighbor').removeClass('neighbor-prev').removeClass('neighbor-next').css('left', '');
                     var activeZone = Math.min(250, that.$element.width()/2.5);
                     if (delta > activeZone) {
-                        console.log('that.next');
                         that.next();
                     } else if  (delta < -activeZone) {
-                        console.log('that.prev');
                         that.prev();
                     }
+                    e.preventDefault();
                 }
                 that.$element.off('touchend', onTouchEnd);
                 that.cycle();
