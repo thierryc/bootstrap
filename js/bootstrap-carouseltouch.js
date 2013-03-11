@@ -1,7 +1,7 @@
 
 /* ==========================================================
- * bootstrap-carousel-touch.js v0.1.0
- * javascript.html#carousel-touch
+ * bootstrap-carouseltouch.js v0.1.0
+ * javascript.html#carouseltouch
  * ==========================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -186,7 +186,7 @@
                     var nextItems = that.$element.find('.item.next');
                     nextItems.removeClass('next');
                     
-                    event.preventDefault();
+                    //event.preventDefault();
                 }
                 
             };
@@ -249,50 +249,50 @@
  /* CAROUSEL TOUCH PLUGIN DEFINITION
     * ========================== */
 
-    var old = $.fn.carousel_touch
+    var old = $.fn.carouseltouch
 
-    $.fn.carousel_touch = function (option) {
+    $.fn.carouseltouch = function (option) {
         return this.each(function () {
             var $this = $(this)
-                , data = $this.data('carousel-touch')
-                , options = $.extend({}, $.fn.carousel_touch.defaults, typeof option == 'object' && option)
+                , data = $this.data('carouseltouch')
+                , options = $.extend({}, $.fn.carouseltouch.defaults, typeof option == 'object' && option)
                 , action = typeof option == 'string' ? option : options.slide
-            if (!data) $this.data('carousel-touch', (data = new CarouselTouch(this, options)))
+            if (!data) $this.data('carouseltouch', (data = new CarouselTouch(this, options)))
             if (typeof option == 'number') data.to(option)
             else if (action) data[action]()
             else if (options.interval) data.pause().cycle()
         })
     }
 
-    $.fn.carousel_touch.defaults = {
+    $.fn.carouseltouch.defaults = {
         interval: 5000
     , pause: 'hover'
     }
 
-    $.fn.carousel_touch.Constructor = CarouselTouch
+    $.fn.carouseltouch.Constructor = CarouselTouch
 
 
  /* CAROUSEL TOUCH NO CONFLICT
     * ==================== */
 
-    $.fn.carousel_touch.noConflict = function () {
-        $.fn.carousel_touch = old
+    $.fn.carouseltouch.noConflict = function () {
+        $.fn.carouseltouch = old
         return this
     }
 
  /* CAROUSEL TOUCH DATA-API
     * ================= */
 
-    $(document).on('click.carousel_touch.data-api', '[data-slide], [data-slide-to]', function (e) {
+    $(document).on('click.carouseltouch.data-api', '[data-slide], [data-slide-to]', function (e) {
         var $this = $(this), href
             , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
             , options = $.extend({}, $target.data(), $this.data())
             , slideIndex
             
-        $target.carousel_touch(options);
+        $target.carouseltouch(options);
         
         if (slideIndex = $this.attr('data-slide-to')) {
-            $target.data('carousel-touch').pause().to(slideIndex).cycle()
+            $target.data('carouseltouch').pause().to(slideIndex).cycle()
         }
         
         e.preventDefault()
