@@ -629,6 +629,7 @@
             var startX, startY, offset, delta, scrolling = false;
             var that = this;
             var isCycling = this.interval;
+            var $active;
             
             var onTouchStart = function (event) {
                 var e = event.originalEvent;
@@ -636,7 +637,14 @@
                 
                 isCycling && that.pause()
                 
+                // prevent cycling
                 if (isCycling) return;
+                clearInterval(that.interval)
+                that.interval = null
+                
+                that.$active = that.$element.find('.item.active');
+                if (that.$active.hasClass('prev') || that.$active.hasClass('next')) return;
+                that.$active.addClass('touch');
                 
                 if (e.touches.length === 1) {
                     that.pause();
@@ -652,26 +660,25 @@
             
             var onTouchMove = function (event) {
                 var e = event.originalEvent;
-                var $neighbor, slide, margin, $active;
+                var $neighbor, slide, margin;
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
                     e.preventDefault();
-                    $active = that.$element.find('.item.active');
-                    $active.addClass('touch');
+                   
                     margin = slide = (100/that.$element.width()) * delta;
                     if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
                     
                     if (slide > 0) {
-                        $neighbor = $active.next();
+                        $neighbor = that.$active.next();
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').first();
                         $neighbor.addClass('next').addClass('neighbor').css('left', ( 100 - margin ) + '%');
                     } else {
-                        $neighbor = $active.prev();
+                        $neighbor = that.$active.prev();
                         $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').last();
                         $neighbor.addClass('prev').addClass('neighbor').css('left', ( -100 - margin ) + '%');
                     }
-                    $active.css('left', (-margin) + '%');
+                    that.$active.css('left', (-margin) + '%');
                 }
             };
             
@@ -679,10 +686,9 @@
                 var e = event.originalEvent;
                 that.$element.off('touchmove', onTouchMove);
                 if (!scrolling) {
-                    var $active = that.$element.find('.item.active');
                     var $neighbors = that.$element.find('.item.neighbor');
                     e.preventDefault();
-                    $active.removeClass('touch').css('left', '');
+                    that.$active.removeClass('touch').css('left', '');
                     $neighbors.removeClass('neighbor').removeClass('neighbor-prev').removeClass('neighbor-next').css('left', '');
                     var activeZone = Math.min(250, that.$element.width()/2.5);
                     if (delta > activeZone) {
