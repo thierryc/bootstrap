@@ -175,8 +175,8 @@
                     // prevent cycling
                     if (isCycling) return;
                     
-                    that.$element.find('.item.prev').remove('prev');
-                    that.$element.find('.item.next').remove('next');
+                    that.$element.find('.prev').removeClass('prev');
+                    that.$element.find('.next').removeClass('next');
                     
                     that.$active = that.$element.find('.item.active');
                     
@@ -185,9 +185,6 @@
                     //console.log(that.$element);
                     startX = e.touches[0].pageX;
                     startY = e.touches[0].pageY;
-                    
-                    that.$active.addClass('touch');
-                    
                     
                     that.$neighborNext = that.$active.next();
                     that.$neighborPrev = that.$active.prev();
@@ -205,7 +202,7 @@
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
                     e.preventDefault();
-                   
+                    that.$active.addClass('touch');
                     margin = slide = (100/that.$element.width()) * delta;
                     if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
                     
