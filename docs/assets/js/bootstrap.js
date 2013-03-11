@@ -629,32 +629,36 @@
             var startX, startY, offset, delta, scrolling = false;
             var that = this;
             var isCycling = this.interval;
-            var $active;
+            var $active, $neighborNext, $neighborPrev;
             
             var onTouchStart = function (event) {
                 var e = event.originalEvent;
                 if (that.sliding) return;
                 
-                isCycling && that.pause()
-                
-                // prevent cycling
-                if (isCycling) return;
-                clearInterval(that.interval)
-                that.interval = null
-                
-                that.$active = that.$element.find('.item.active');
-                if (that.$active.hasClass('prev') || that.$active.hasClass('next')) return;
-                that.$active.addClass('touch');
-                
                 if (e.touches.length === 1) {
-                    that.pause();
+                
+                    that.pause()
+                
+                    // prevent cycling
+                    if (isCycling) return;
+                    clearInterval(that.interval)
+                    that.interval = null
+                    
+                    that.$active = that.$element.find('.item.active');
+                    
+                    if (that.$active.hasClass('prev') || that.$active.hasClass('next')) return;
+                    
                     //console.log(that.$element);
                     startX = e.touches[0].pageX;
                     startY = e.touches[0].pageY;
+                    
+                    that.$active.addClass('touch');
+                    that.$neighborNext = that.$active.next();
+                    that.$neighborPrev = that.$active.prev();
+                    
+                    that.$element.on('touchmove', { carouselTouch: that }, onTouchMove);
+                    that.$element.on('touchend', { carouselTouch: that }, onTouchEnd);
                 }
-                that.$element.on('touchmove', { carouselTouch: that }, onTouchMove);
-                that.$element.on('touchend', { carouselTouch: that }, onTouchEnd);
-                
             };
             this.$element.on('touchstart', onTouchStart);
             
@@ -670,13 +674,13 @@
                     if (that.options.sticky) margin = (slide/5) * Math.log(Math.max(1,Math.abs(slide)))/2;
                     
                     if (slide > 0) {
-                        $neighbor = that.$active.next();
-                        $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').first();
+                        $neighbor = that.$neighborNext.length ? that.$neighborNext : that.$element.find('.item').first();
                         $neighbor.addClass('next').addClass('neighbor').css('left', ( 100 - margin ) + '%');
+                        //that.$active.prev().css('-100%');
                     } else {
-                        $neighbor = that.$active.prev();
-                        $neighbor = $neighbor.length ? $neighbor : that.$element.find('.item').last();
+                        $neighbor = that.$neighborPrev.length ? that.$neighborPrev : that.$element.find('.item').last();
                         $neighbor.addClass('prev').addClass('neighbor').css('left', ( -100 - margin ) + '%');
+                        //that.$active.next().css('100%');
                     }
                     that.$active.css('left', (-margin) + '%');
                 }
