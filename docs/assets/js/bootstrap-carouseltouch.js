@@ -194,7 +194,6 @@
                 delta = startX - e.touches[0].pageX;
                 scrolling = (Math.abs(delta) < Math.abs(e.touches[0].pageY - startY));
                 if (!scrolling) {
-                
                     if (isCycling) return;
                     if ($active.hasClass('prev') || $active.hasClass('next')) return;
                     
@@ -218,6 +217,7 @@
             
             var onTouchEnd = function (event) {
                 var e = event.originalEvent;
+                $active = that.$element.find('.item.active');
                 that.$element.off('touchmove', onTouchMove);
                 if (!scrolling) {
                     var $neighbors = that.$element.find('.item.neighbor');
@@ -230,8 +230,12 @@
                     } else if  (delta < -activeZone) {
                         that.prev();
                     }
+                    // 15 is finger size ;-) 
+                    if (Math.abs(delta) > 15) {
+                        e.preventDefault();
+                    }
                     isCycling && that.cycle()
-                    e.preventDefault();
+                    
                 }
                 
                 that.$element.off('touchend', onTouchEnd);
