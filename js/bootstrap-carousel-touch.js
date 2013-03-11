@@ -170,13 +170,12 @@
                 
                 if (e.touches.length === 1) {
                 
-                    
-                    isCycling && that.pause()
+                    that.pause()
+                
                     // prevent cycling
                     if (isCycling) return;
-                    
-                    that.$element.find('.item.prev').remove('prev');
-                    that.$element.find('.item.next').remove('next');
+                    clearInterval(that.interval)
+                    that.interval = null
                     
                     that.$active = that.$element.find('.item.active');
                     
@@ -187,8 +186,6 @@
                     startY = e.touches[0].pageY;
                     
                     that.$active.addClass('touch');
-                    
-                    
                     that.$neighborNext = that.$active.next();
                     that.$neighborPrev = that.$active.prev();
                     
@@ -232,10 +229,10 @@
                     $neighbors.removeClass('neighbor').removeClass('neighbor-prev').removeClass('neighbor-next').css('left', '');
                     var activeZone = Math.min(250, that.$element.width()/2.5);
                     if (delta > activeZone) {
-                        //console.log('that.next');
+                        console.log('that.next');
                         that.next();
                     } else if  (delta < -activeZone) {
-                        //console.log('that.prev');
+                        console.log('that.prev');
                         that.prev();
                     }
                 }
