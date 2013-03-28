@@ -6108,6 +6108,35 @@ a.badge:focus {
   margin-bottom: 0;
 }
 
+.carouseltouch {
+  position: relative;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+.carousel-inner > .neighbor,
+.carousel-inner > .touch {
+  -webkit-transition: none;
+     -moz-transition: none;
+       -o-transition: none;
+          transition: none;
+}
+
+.carousel-inner > .neighbor,
+.carousel-inner > .active,
+.carousel-inner > .next,
+.carousel-inner > .prev {
+  display: block;
+}
+
+.carousel-inner > .neighbor,
+.carousel-inner > .next,
+.carousel-inner > .prev {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
 .hero-unit {
   padding: 60px;
   margin-bottom: 30px;
