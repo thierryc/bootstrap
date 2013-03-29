@@ -68,6 +68,10 @@
 
     // carousel demo
     $('#myCarousel').carousel()
+    
+    // carousel demo
+    $('#myCarouseltouch').carouseltouch()
+
 
     // javascript build logic
     var inputsComponent = $("#components.download input")

@@ -451,6 +451,7 @@
   * ================= */
 
   $(document).on('click.carousel.data-api', '[data-slide], [data-slide-to]', function (e) {
+    console.log('Carousel');
     var $this = $(this), href
       , $target = $($this.attr('data-target') || (href = $this.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '')) //strip for ie7
       , options = $.extend({}, $target.data(), $this.data())
@@ -507,6 +508,8 @@
     this.options.pause == "hover" && this.$element
       .on("mouseenter", $.proxy(this.pause, this))
       .on("mouseleave", $.proxy(this.cycle, this))
+      
+    console.log('CarouselTouch');
     
   }
 
@@ -629,6 +632,8 @@
       var that = this;
       var isCycling = this.interval;
       var $active;
+      
+      console.log('touch');
       
       var onTouchStart = function (event) {
         var e = event.originalEvent;

@@ -40,6 +40,8 @@
     this.options.pause == "hover" && this.$element
       .on("mouseenter", $.proxy(this.pause, this))
       .on("mouseleave", $.proxy(this.cycle, this))
+      
+    console.log('CarouselTouch');
     
   }
 
@@ -162,6 +164,8 @@
       var that = this;
       var isCycling = this.interval;
       var $active;
+      
+      console.log('touch');
       
       var onTouchStart = function (event) {
         var e = event.originalEvent;
