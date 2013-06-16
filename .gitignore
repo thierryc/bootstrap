@@ -1,3 +1,8 @@
+# Ignore compiled docs
+_gh_pages
+_site
+serve
+
 # Numerous always-ignore extensions
 *.diff
 *.err
